@@ -1,4 +1,4 @@
-# hono-core
+# mongodb-connector
 
 To install dependencies:
 

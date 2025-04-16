@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "bun build",
-    "dev:bun": "bun run --filter=@apps/hono-bun",
+    "hono-bun": "bun --filter=@apps/hono-bun",
+    "dev:bun": "bun run hono-bun dev",
     "dev:cf": "bun dev --filter=@apps/hono-cf",
     "lint": "bun lint",
     "deploy": "bun deploy --filter=@apps/hono-cf",
@@ -36,13 +37,15 @@
     "typescript": "^5"
   },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "dependencies": {
     "@cloudflare/workers-types": "^4.20250402.0",
+    "@grpc/grpc-js": "^1.13.3",
     "@hono/node-server": "^1.14.1",
     "@hono/zod-validator": "^0.4.3",
+    "hono": "^4.7.7",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.15.0",

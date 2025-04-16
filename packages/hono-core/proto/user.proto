@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package user;
+
+
+service UserServiceInternal {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse); 
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse); 
+  rpc Update (UpdateUserRequest) returns (UpdateUserResponse); 
+}
+message BenchmarkHonoUser { 
+  string userId = 1;
+  string userName = 2;
+  string createdTime = 3;
+  string updatedTime = 4;
+}
+message GetUserRequest {
+  string userId = 1; 
+}
+message GetUserResponse {
+  bool ok = 1;
+  BenchmarkHonoUser data = 2;
+}
+message CreateUserRequest {
+  BenchmarkHonoUser data = 1;
+}
+message CreateUserResponse {
+  bool ok = 1;
+  BenchmarkHonoUser data = 2;
+
+}
+message UpdateUserRequest {
+  BenchmarkHonoUser data = 1;
+}
+message UpdateUserResponse {
+  bool ok = 1;
+}
+

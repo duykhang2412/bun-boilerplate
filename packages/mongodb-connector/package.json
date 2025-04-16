@@ -1,0 +1,16 @@
+{
+  "name": "@packages/mongodb-connector",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./config-mongo": "./src/config.ts",
+    "./interface-mongo": "./src/interface.ts",
+    "./main-mongo": "./src/main.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

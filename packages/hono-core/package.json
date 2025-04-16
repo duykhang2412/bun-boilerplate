@@ -1,19 +1,21 @@
 {
   "name": "@packages/hono-core",
-  "module": "index.ts",
-  "type": "module",
   "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
   "exports": {
-    "./client": "./src/client.ts",
-    "./server": "./src/server.ts"
+    "./http-server": "./src/http-server.ts",
+    "./grpc-server": "./src/grpc-server.ts"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@packages/common": "workspace:*"
+    "@hono/zod-validator": "^0.4.3",
+    "@packages/common": "workspace:*",
+    "@packages/mongodb-connector": "workspace:*",
+    "hono": "^4.7.5",
+    "zod": "^3.24.2"
   }
 }

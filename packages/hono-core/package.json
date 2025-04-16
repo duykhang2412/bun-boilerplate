@@ -1,12 +1,19 @@
 {
-  "name": "hono-core",
+  "name": "@packages/hono-core",
   "module": "index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"
   },
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts"
+  },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@packages/common": "workspace:*"
   }
 }

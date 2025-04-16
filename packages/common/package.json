@@ -1,12 +1,21 @@
 {
-  "name": "common",
-  "module": "index.ts",
+  "name": "@packages/common",
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.16"
+  },
+  "exports": {
+    "./get-config": "./src/get-config.ts",
+    "./get-logger": "./src/get-logger.ts"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "winston": "^3.17.0"
   }
 }

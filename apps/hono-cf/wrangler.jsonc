@@ -1,0 +1,34 @@
+{
+    "name": "my-worker",
+    "main": "src/index.ts",
+    "compatibility_date": "2025-04-17",
+    "workers_dev": false,
+    "compatibility_flags": [
+        "nodejs_compat"
+    ]
+    // "route": {
+    //     "pattern": "example.org/*",
+    //     "zone_name": "example.org"
+    // },
+    // // "kv_namespaces": [
+    // //     {
+    // //         "binding": "<MY_NAMESPACE>",
+    // //         "id": "<KV_ID>"
+    // //     }
+    // // ],
+    // "env": {
+    //     "staging": {
+    //         "name": "my-worker-staging",
+    //         "route": {
+    //             "pattern": "staging.example.org/*",
+    //             "zone_name": "example.org"
+    //         },
+    //         "kv_namespaces": [
+    //             {
+    //                 "binding": "<MY_NAMESPACE>",
+    //                 "id": "<STAGING_KV_ID>"
+    //             }
+    //         ]
+    //     }
+    // }
+}

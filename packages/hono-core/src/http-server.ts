@@ -68,3 +68,4 @@ export function startHttpServer() {
     Bun.serve({ fetch: app.fetch, port });
     console.log(`HTTP server listening on port ${port}`);
 }
+export { app }

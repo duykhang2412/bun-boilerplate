@@ -1,0 +1,16 @@
+{
+  "name": "redis-connector",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "exports": {
+    "./config-redis": "./src/config.ts",
+    "./index-redis": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
-import { getCollection, setupMongoDatabase } from '@packages/mongodb-connector/main-mongo'
+import * as yaml from 'js-yaml';
+import { getCollection, setupMongoDatabase } from '@packages/mongodb-connector'
 import type { BenchmarkHonoUser } from '../../models/user-entity';
-import type { ConfigMongoDb } from '@packages/mongodb-connector/interface-mongo';
+import type { ConfigMongoDb } from '@packages/mongodb-connector';
 
 const envPath = path.resolve(__dirname, '../../../../apps/env.development.yaml');
 const envFile = fs.readFileSync(envPath, 'utf8');

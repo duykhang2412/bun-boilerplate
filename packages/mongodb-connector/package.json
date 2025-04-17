@@ -3,9 +3,7 @@
   "type": "module",
   "private": true,
   "exports": {
-    "./config-mongo": "./src/config.ts",
-    "./interface-mongo": "./src/interface.ts",
-    "./main-mongo": "./src/main.ts"
+    ".": "./src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

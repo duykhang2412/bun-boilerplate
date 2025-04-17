@@ -9,7 +9,9 @@
     "dev:cf": "bun dev --filter=@apps/hono-cf",
     "lint": "bun lint",
     "deploy": "bun deploy --filter=@apps/hono-cf",
-    "format": "bun --write ."
+    "format": "bun --write .",
+    "bench:get": "autocannon -c 10 -d 20 http://localhost:3000/user/u123",
+    "bench:post": "autocannon -c 20 -d 30 -m POST -H 'Content-Type: application/json' -b '{\"userId\":\"bench1\",\"userName\":\"Tester\"}' http://localhost:3000/user"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
@@ -45,6 +47,8 @@
     "@grpc/grpc-js": "^1.13.3",
     "@hono/node-server": "^1.14.1",
     "@hono/zod-validator": "^0.4.3",
+    "ajv": "^8.17.1",
+    "autocannon": "^8.0.0",
     "hono": "^4.7.7",
     "ioredis": "^5.6.1",
     "js-yaml": "^4.1.0",

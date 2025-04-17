@@ -15,6 +15,7 @@
     "@hono/zod-validator": "^0.4.3",
     "@packages/common": "workspace:*",
     "@packages/mongodb-connector": "workspace:*",
+    "@packages/ajv-decorator": "workspace:*",
     "hono": "^4.7.5",
     "zod": "^3.24.2"
   }

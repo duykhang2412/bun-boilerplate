@@ -5,7 +5,7 @@
   "scripts": {
     "build": "bun build",
     "hono-bun": "bun --filter=@apps/hono-bun",
-    "dev:bun": "bun run hono-bun dev",
+    "dev:bun": "bun --watch apps/hono-bun/src/index.ts",
     "dev:cf": "bun dev --filter=@apps/hono-cf",
     "lint": "bun lint",
     "deploy": "bun deploy --filter=@apps/hono-cf",
@@ -48,12 +48,14 @@
     "@hono/node-server": "^1.14.1",
     "@hono/zod-validator": "^0.4.3",
     "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "autocannon": "^8.0.0",
     "hono": "^4.7.7",
     "ioredis": "^5.6.1",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "mongodb": "^6.15.0",
+    "typia": "^9.1.1",
     "winston": "^3.17.0",
     "zod": "^3.24.2"
   },

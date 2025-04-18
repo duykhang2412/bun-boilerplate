@@ -1,11 +1,11 @@
 {
-  "name": "ajv-decorator",
+  "name": "@packages/ajv-decorator",
   "type": "module",
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"
   },
   "exports": {
-    ".": "./src/decorator.ts"
+    "./test": "./src/config.ts"
   }
 }

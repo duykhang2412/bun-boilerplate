@@ -2,7 +2,7 @@
   "name": "@apps/hono-bun",
   "type": "module",
   "scripts": {
-    "dev": "bun --hot src/index.ts"
+    "dev": "bun  --watch  src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -17,5 +17,9 @@
     "express": "^5.1.0",
     "hono": "^4.7.5",
     "js-yaml": "^4.1.0"
-  }
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }

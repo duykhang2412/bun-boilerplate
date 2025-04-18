@@ -4,15 +4,15 @@ export function isNumber() {
         type: 'string',
         schema: {
             type: "object",
-                properties: {
-                    minimum: { type: "number" },
-                    maximum: { type: "number" },
-                    default: { type: "number" }
-                },
-                additionalProperties: false
+            properties: {
+                minimum: { type: "number" },
+                maximum: { type: "number" },
+                default: { type: "number" }
+            },
+            additionalProperties: false
         },
         modifying: true,
-        validate: function (schema, value, parentSchema, dataCxt) {
+        validate: function (schema: { minimum?: number; maximum?: number; default?: number }, value: string, _parentSchema: any, dataCxt: { parentData: any; parentDataProperty: string }) {
             if (typeof value !== "string") return false;
             const num = Number(value.trim());
             if (isNaN(num)) return false;

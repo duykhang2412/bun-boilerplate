@@ -4,14 +4,23 @@ export function isMinMaxLength() {
         type: "string",
         schema: true,
         validate: function (
-            schema: { min?: number; max?: number },
+            schema: { min?: number; max?: number; isNumber?: boolean },
             data: string
         ): boolean {
             if (typeof data !== "string") return false;
-            const length = [...new Intl.Segmenter().segment(data.trim())].length;
+            const trimmedData = data.trim();
             
-            const isValidMin = schema.min === undefined || length >= schema.min;
-            const isValidMax = schema.max === undefined || length <= schema.max;
+            let value: number;
+
+            if (schema.isNumber) {
+                value = Number(trimmedData);
+                if (isNaN(value)) return false; 
+            } else {
+                value = [...new Intl.Segmenter().segment(trimmedData)].length;
+            }
+
+            const isValidMin = schema.min === undefined || value >= schema.min;
+            const isValidMax = schema.max === undefined || value <= schema.max;
 
             return isValidMin && isValidMax;
         },
@@ -20,6 +29,7 @@ export function isMinMaxLength() {
             properties: {
                 min: { type: "integer", nullable: true },
                 max: { type: "integer", nullable: true },
+                isNumber: { type: "boolean", nullable: true }
             },
         },
     };

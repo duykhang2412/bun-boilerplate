@@ -1,24 +1,33 @@
 export function isTrimData() {
   return {
-    keyword: 'isTrimData',
-    type: 'string',
-    modifying: true, 
-    compile: function (_schema, parentSchema) {
-      const minLength = parentSchema.minLength ?? 0; 
-      const maxLength = parentSchema.maxLength ?? Infinity; 
-
-      return function (data, context) {
+    keyword: "isTrimData",
+    type: "string",
+    modifying: true,
+    compile: function (schema: { min?: number; max?: number }) {
+      return function (data: string, context: any) {
         if (typeof data === "string" && context.parentData && context.parentDataProperty !== undefined) {
           const trimmed = data.trim();
-          
-          if (trimmed.length < minLength) return false;
-          if (trimmed.length > maxLength) return false;
-          
           context.parentData[context.parentDataProperty] = trimmed;
+
+          const segmentLength = [...new Intl.Segmenter().segment(trimmed)].length;
+
+          if (schema.min !== undefined && segmentLength < schema.min) {
+            return false;
+          }
+          if (schema.max !== undefined && segmentLength > schema.max) {
+            return false;
+          }
         }
         return true;
       };
     },
-    errors: true, 
+    metaSchema: {
+      type: "object",
+      properties: {
+        min: { type: "integer", nullable: true },
+        max: { type: "integer", nullable: true },
+      },
+    },
+    errors: true,
   };
 }

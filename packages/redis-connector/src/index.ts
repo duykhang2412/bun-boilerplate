@@ -1,7 +1,7 @@
 import Redis from "ioredis";
 import type { Cluster, ClusterNode, ClusterOptions } from "ioredis";
-import { getLogger } from "@packages/common/get-logger";
-import { setupConfiguration, getOrThrow } from "@packages/common/get-config";
+import { getLogger } from "@packages/common";
+import { setupConfiguration, getOrThrow } from "@packages/common";
 
 type RedisConfig = {
     nodes: ClusterNode[];

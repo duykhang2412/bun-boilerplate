@@ -1,6 +1,7 @@
-export * from './formats/index.ts'
-export * from './keywords/index.ts'
-export * from './swagger/interface.ts'
-export * from './swagger/swagger.ts'
-export * from './decorator.ts'
-export * from './main.ts'
+export * from './formats';
+export * from './keywords';
+export * from './decorator';
+export * from './main';
+export * from './swagger/interface';
+export * from './swagger/swagger';
+

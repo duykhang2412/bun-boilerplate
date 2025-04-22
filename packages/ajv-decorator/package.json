@@ -1,14 +1,11 @@
 {
   "name": "@packages/ajv-decorator",
+  "module": "index.ts",
   "type": "module",
   "private": true,
-  "exports": {
-    ".": "./src/config.ts"
-  },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.1",
     "@packages/common": "workspace:*",
-    "@types/google-libphonenumber": "^7.4.30",
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
     "emoji-regex": "^10.4.0",
@@ -19,9 +16,14 @@
     "reflect-metadata": "^0.2.2",
     "swagger-ui-dist": "^5.20.0"
   },
+  "exports": {
+    ".": "./src/config.ts"
+  },
   "devDependencies": {
     "rimraf": "^6.0.1",
-    "typescript": "^5.5.4",
-    "@types/bun": "latest"
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }

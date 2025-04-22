@@ -1,59 +1,75 @@
-import fs from 'fs';
+import { Hono, type Context } from 'hono';
+import { ajvValidator, getAjvSchema } from '@packages/ajv-decorator';
+import * as grpc from '@grpc/grpc-js';
+import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
-import * as yaml from 'js-yaml';
-import { getCollection, setupMongoDatabase } from '@packages/mongodb-connector'
-import type { BenchmarkHonoUser } from '../../models/user-entity';
-import type { ConfigMongoDb } from '@packages/mongodb-connector';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
+import { GetUserDto } from '../dtos/get-user.dto';
 
-const envPath = path.resolve(__dirname, '../../../../apps/hono-bun/env.development.yaml');
-const envFile = fs.readFileSync(envPath, 'utf8');
-const envConfig = yaml.load(envFile) as any;
+const PROTO_PATH = path.resolve(__dirname, '../../proto/user.proto');
+const packageDef = protoLoader.loadSync(PROTO_PATH, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+});
+const proto = (grpc.loadPackageDefinition(packageDef) as any).user;
+const client = new proto.UserServiceInternal(
+    'localhost:3050',
+    grpc.credentials.createInsecure()
+);
 
-const mongoConfig: ConfigMongoDb = envConfig.store.mongo.benchmark;
-
-let collectionPromise: Promise<any>;
-
-async function getUserCollection() {
-    if (!collectionPromise) {
-
-        const store = await setupMongoDatabase(mongoConfig);
-        if (!store) throw new Error('Failed to connect to MongoDB');
-        collectionPromise = Promise.resolve(
-            getCollection<BenchmarkHonoUser>(store.database, mongoConfig.collectionName),
-        );
+const UserController = new Hono();
+UserController.post(
+    '/user-controller/CreateUser',
+    ajvValidator('json', getAjvSchema(CreateUserDto)),
+    async (c: Context) => {
+        const body = (await c.req.json()) as CreateUserDto;
+        return new Promise((resolve) => {
+            client.CreateUser({ data: body }, (err: any, res: any) => {
+                if (err) {
+                    resolve(c.json({ error: err.message }, 500));
+                } else {
+                    resolve(c.json(res, 201));
+                }
+            });
+        });
     }
-    return collectionPromise;
-}
+);
 
-export async function getUser(userId: string) {
-    const collection = await getUserCollection();
-    return await collection.findOne({ userId });
-}
-
-export async function createUser(data: { userId: string; userName: string; }) {
-    const now = new Date().toISOString();
-    const userData: BenchmarkHonoUser = {
-        userId: data.userId,
-        userName: data.userName,
-        createdTime: now,
-        updatedTime: now,
-    };
-    const collection = await getUserCollection();
-    await collection.insertOne(userData);
-    return userData;
-}
-
-export async function updateUser(data: { userId: string; userName?: string; }) {
-    const now = new Date().toISOString();
-    const updateFields: any = { updatedTime: now };
-    if (data.userName !== undefined) {
-        updateFields.userName = data.userName;
+UserController.put(
+    '/user-controller/UpdateUser',
+    ajvValidator('json', getAjvSchema(UpdateUserDto)),
+    async (c: Context) => {
+        const body = (await c.req.json()) as UpdateUserDto;
+        return new Promise((resolve) => {
+            client.Update({ data: body }, (err: any, res: any) => {
+                if (err) {
+                    resolve(c.json({ error: err.message }, 500));
+                } else {
+                    resolve(c.json(res));
+                }
+            });
+        });
     }
+);
+UserController.get(
+    '/user-controller/GetUser/:userId',
+    ajvValidator('param', getAjvSchema(GetUserDto)),
+    async (c: Context) => {
+        const userId = c.req.param('userId');
+        return new Promise((resolve) => {
+            client.GetUser({ userId }, (err: any, res: any) => {
+                if (err) {
+                    resolve(c.json({ error: err.message }, 500));
+                } else {
+                    resolve(c.json(res));
+                }
+            });
+        });
+    }
+);
 
-    const collection = await getUserCollection();
-    const result = await collection.updateOne(
-        { userId: data.userId },
-        { $set: updateFields }
-    );
-    return result.modifiedCount > 0;
-}
+export default UserController;

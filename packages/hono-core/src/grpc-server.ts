@@ -5,7 +5,7 @@ import {
     getUser,
     createUser,
     updateUser,
-} from './controller/user-controller';
+} from './services/user.services';
 
 const PROTO_PATH = path.resolve(__dirname, '../proto/user.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {

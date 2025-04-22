@@ -1,0 +1,36 @@
+{
+  "name": "@apps/example",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsx": "^4.7.1",
+    "typescript": "5.6.2"
+  },
+  "scripts": {
+    "dev": "bun --watch src/main.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "dependencies": {
+    "@packages/ajv-decorator": "workspace:*",
+    "@packages/common": "workspace:*",
+    "@packages/mongodb-connector": "workspace:*",
+    "@packages/redis-connector": "workspace:*",
+    "@packages/event-pub-sub": "workspace:*",
+    "@samchon/openapi": "^1.2.4",
+    "ajv": "^8.17.1",
+    "ajv-errors": "^3.0.0",
+    "hono": "^4.6.12",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.5.0",
+    "openapi-types": "^12.1.3",
+    "rimraf": "^6.0.1"
+  }
+}

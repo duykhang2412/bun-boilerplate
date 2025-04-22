@@ -1,4 +1,4 @@
-import { AjvField, AjvSchemaObject } from '@packages/ajv-decorator/test';
+import { AjvField, AjvSchemaObject } from '@packages/ajv-decorator';
 
 import { ErrorResponse } from './error.response';
 

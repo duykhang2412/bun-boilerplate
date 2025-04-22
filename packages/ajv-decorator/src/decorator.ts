@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-
-import Ajv, {ErrorObject} from 'ajv';
+import type { ErrorObject } from 'ajv'
+import { Ajv } from 'ajv';
 import addErrors from 'ajv-errors';
 
 const AJV_SCHEMA_KEY = Symbol('ajv:schema');
@@ -32,7 +32,7 @@ export function AjvAddFormat(name: string, schema: any) {
 export function AjvSchemaObject(schema: object) {
   return function (target: any) {
     let existingSchema =
-        Reflect.getMetadata(AJV_SCHEMA_KEY, target.prototype) || {};
+      Reflect.getMetadata(AJV_SCHEMA_KEY, target.prototype) || {};
 
     const parent = Object.getPrototypeOf(target);
     if (parent) {
@@ -41,9 +41,9 @@ export function AjvSchemaObject(schema: object) {
     }
 
     Reflect.defineMetadata(
-        AJV_SCHEMA_KEY,
-        { ...existingSchema, ...schema, $id: target.name },
-        target.prototype,
+      AJV_SCHEMA_KEY,
+      { ...existingSchema, ...schema, $id: target.name },
+      target.prototype,
     );
   };
 }
@@ -65,45 +65,45 @@ export function AjvFieldType(schema: any, key?: string) {
   return function (target: any, propertyKey: string) {
     try {
       const existingSchema =
-          Reflect.getMetadata(AJV_SCHEMA_KEY, schema.prototype );
+        Reflect.getMetadata(AJV_SCHEMA_KEY, schema.prototype);
 
       if (key && existingSchema) {
-        if(!ajv.getSchema(key)){
+        if (!ajv.getSchema(key)) {
           ajv.addSchema(existingSchema, key);
         }
       }
-    }catch (e){ }
+    } catch (e) { }
   };
 }
 
 export function getAjvDocsSchema(target: any, key?: string) {
   const properties =
-      Reflect.getMetadata(AJV_SCHEMA_KEY, target.prototype ?? target) || {};
+    Reflect.getMetadata(AJV_SCHEMA_KEY, target.prototype ?? target) || {};
 
   const schema = {
     type: 'object',
     additionalProperties: false,
     ...properties,
-    $id: `${target.name?.replace('Dto','Request')}`,
+    $id: `${target.name?.replace('Dto', 'Request')}`,
   };
 
-  if(typeof target === 'object'){
+  if (typeof target === 'object') {
     const keys = Object.keys(target);
-    if(keys.some(key => !isNaN(Number(key)))){
+    if (keys.some(key => !isNaN(Number(key)))) {
       schema.type = 'number';
       schema.$id = key;
       const listData = Object.values(target);
-      schema.enum = listData.filter(v => typeof v ==='number');
-      schema['x-enum-varnames'] = listData.filter(v => typeof v ==='string');
+      schema.enum = listData.filter(v => typeof v === 'number');
+      schema['x-enum-varnames'] = listData.filter(v => typeof v === 'string');
     }
 
     try {
       if (key && schema) {
-        if(!ajv.getSchema(key)){
+        if (!ajv.getSchema(key)) {
           ajv.addSchema(schema, key);
         }
       }
-    }catch (e) {}
+    } catch (e) { }
   }
 
   return schema;
@@ -111,14 +111,14 @@ export function getAjvDocsSchema(target: any, key?: string) {
 
 export function getAjvSchema(target: any, key?: string) {
   const properties =
-      Reflect.getMetadata(AJV_SCHEMA_KEY, target.prototype ?? target) || {};
+    Reflect.getMetadata(AJV_SCHEMA_KEY, target.prototype ?? target) || {};
 
   const parent = Object.getPrototypeOf(target);
 
   let mergedSchema = {};
   if (parent) {
     const parentSchema = Reflect.getMetadata("ajv:schema", parent);
-    if(parentSchema){
+    if (parentSchema) {
       mergedSchema = { ...parentSchema, ...properties };
     }
   }
@@ -139,20 +139,20 @@ export function handleErrors(validateResult: ErrorObject[]): {
   error: { code: number; message: string; details: string[] };
 } {
   const minimalErrors = validateResult
-      .filter((e) => e.keyword !== 'if')
-      .map(({ instancePath, schemaPath, keyword, params, message }) => {
-        if (keyword == 'additionalProperties') {
-          return {
-            message: `must not allow the property '${params.additionalProperty}' to exist.`
-          }
-        }
-        const propertyName = instancePath ? instancePath.slice(1) : ''; //remove path
-        const propertyMessage = message?.replace(/["\\]/g, ''); //remove spec char
-        const char = `${propertyName} ${propertyMessage}`;
+    .filter((e) => e.keyword !== 'if')
+    .map(({ instancePath, schemaPath, keyword, params, message }) => {
+      if (keyword == 'additionalProperties') {
         return {
-          message: propertyName === '' ? char.trim() : char,
-        };
-      });
+          message: `must not allow the property '${params.additionalProperty}' to exist.`
+        }
+      }
+      const propertyName = instancePath ? instancePath.slice(1) : ''; //remove path
+      const propertyMessage = message?.replace(/["\\]/g, ''); //remove spec char
+      const char = `${propertyName} ${propertyMessage}`;
+      return {
+        message: propertyName === '' ? char.trim() : char,
+      };
+    });
 
   return {
     ok: false,

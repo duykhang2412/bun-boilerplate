@@ -1,4 +1,4 @@
-import { AjvField, AjvSchemaObject } from '@packages/ajv-decorator/test';
+import { AjvField, AjvSchemaObject } from '@packages/ajv-decorator';
 
 @AjvSchemaObject({
   required: ['code', 'message', 'details'],

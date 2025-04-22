@@ -14,7 +14,7 @@ type AjvHook = (
   c: Context,
 ) => Response | Promise<Response> | void | Promise<void>;
 
-function coerceArrayFields(data, schema) {
+function coerceArrayFields(data: any, schema: any) {
   if (schema.type === 'object' && schema.properties) {
     for (const key in schema.properties) {
       const propSchema = schema.properties[key];

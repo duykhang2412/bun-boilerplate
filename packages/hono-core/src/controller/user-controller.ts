@@ -5,7 +5,7 @@ import { getCollection, setupMongoDatabase } from '@packages/mongodb-connector'
 import type { BenchmarkHonoUser } from '../../models/user-entity';
 import type { ConfigMongoDb } from '@packages/mongodb-connector';
 
-const envPath = path.resolve(__dirname, '../../../../apps/env.development.yaml');
+const envPath = path.resolve(__dirname, '../../../../apps/hono-bun/env.development.yaml');
 const envFile = fs.readFileSync(envPath, 'utf8');
 const envConfig = yaml.load(envFile) as any;
 
@@ -15,6 +15,7 @@ let collectionPromise: Promise<any>;
 
 async function getUserCollection() {
     if (!collectionPromise) {
+
         const store = await setupMongoDatabase(mongoConfig);
         if (!store) throw new Error('Failed to connect to MongoDB');
         collectionPromise = Promise.resolve(

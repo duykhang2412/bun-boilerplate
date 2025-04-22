@@ -4,61 +4,22 @@
   "private": true,
   "scripts": {
     "build": "bun build",
-    "hono-bun": "bun --filter=@apps/hono-bun",
-    "dev:bun": "bun --watch apps/hono-bun/src/index.ts",
+    "dev:bun": "cd apps/hono-bun && bun --hot  dev",
     "dev:cf": "bun dev --filter=@apps/hono-cf",
     "lint": "bun lint",
     "deploy": "bun deploy --filter=@apps/hono-cf",
     "format": "bun --write .",
+    "dev:example": "cd apps/example && bun run --watch example dev",
     "bench:get": "autocannon -c 10 -d 20 http://localhost:3000/user/u123",
     "bench:post": "autocannon -c 20 -d 30 -m POST -H 'Content-Type: application/json' -b '{\"userId\":\"bench1\",\"userName\":\"Tester\"}' http://localhost:3000/user"
-  },
-  "devDependencies": {
-    "@eslint/compat": "^1.2.7",
-    "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.23.0",
-    "@types/bun": "^1.2.8",
-    "@typescript-eslint/eslint-plugin": "^8.29.0",
-    "@typescript-eslint/parser": "^8.29.0",
-    "eslint": "^9.23.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-import-resolver-typescript": "^4.2.5",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-prettier": "^5.2.5",
-    "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^16.0.0",
-    "prettier": "^3.5.3",
-    "rimraf": "^6.0.1",
-    "turbo": "^2.4.4",
-    "typescript": "^5.8.2"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "workspaces": [
-    "packages/*",
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
-  "dependencies": {
-    "@cloudflare/workers-types": "^4.20250402.0",
-    "@grpc/grpc-js": "^1.13.3",
-    "@hono/node-server": "^1.14.1",
-    "@hono/zod-validator": "^0.4.3",
-    "ajv": "^8.17.1",
-    "ajv-formats": "^3.0.1",
-    "autocannon": "^8.0.0",
-    "hono": "^4.7.7",
-    "ioredis": "^5.6.1",
-    "js-yaml": "^4.1.0",
-    "lodash": "^4.17.21",
-    "mongodb": "^6.15.0",
-    "typia": "^9.1.1",
-    "winston": "^3.17.0",
-    "zod": "^3.24.2"
-  },
   "packageManager": "bun@1.0.0",
   "engines": {
     "bun": ">=1.0.0"

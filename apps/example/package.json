@@ -23,6 +23,7 @@
     "@packages/mongodb-connector": "workspace:*",
     "@packages/redis-connector": "workspace:*",
     "@packages/event-pub-sub": "workspace:*",
+    "@packages/neo4j": "workspace:*",
     "@samchon/openapi": "^1.2.4",
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",

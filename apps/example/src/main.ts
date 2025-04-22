@@ -5,6 +5,7 @@ import type { CollectionStructureConfig, ConfigMongoDb } from '@packages/mongodb
 import { Hono } from 'hono';
 import { ExternalEventsPubsub } from '@packages/event-pub-sub';
 import type { ModuleRootOptions } from '@packages/event-pub-sub'
+import { createDriver, type Neo4jConfig } from '@packages/neo4j';
 const logger = getLogger('index');
 const app = new Hono();
 
@@ -32,12 +33,21 @@ setupConfiguration();
     logger.error(error);
   }
 })();
+// Started Neo4j
+(async () => {
+  try {
+    const config: Neo4jConfig = getOrThrow('store.neo4j');
+    createDriver(config);
+  } catch (error) {
+    logger.error(error);
+  }
+})();
 
-// // Khởi động server HTTP
-// const port = 3000;
-// logger.info(`Server is running on http://localhost:${port}`);
-// // logger.info(`Swagger UI http://localhost:${port}/ui`);
-// Bun.serve({
-//   fetch: app.fetch,
-//   port,
-// });
+// Khởi động server HTTP
+const port = 3000;
+logger.info(`Server is running on http://localhost:${port}`);
+// logger.info(`Swagger UI http://localhost:${port}/ui`);
+Bun.serve({
+  fetch: app.fetch,
+  port,
+});

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import * as yaml from 'js-yaml';
 import get from 'lodash/get';
@@ -12,30 +13,41 @@ class ConfigException extends Error { }
 
 const logger = getLogger('packages/get-config.ts');
 
+// __dirname tương ứng với thư mục chứa file này (packages/common/src)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 function loadFromEnv(
   env: Record<string, string | undefined>,
   { delimiter = '__' } = {},
 ): Record<string, string> {
-  return Object.entries(process.env).reduce((acc, [key, value]) => {
-    set(acc, key.toLowerCase().replace(delimiter, '.'), value);
+  return Object.entries(env).reduce((acc, [key, value]) => {
+    if (value !== undefined) {
+      set(acc, key.toLowerCase().replace(delimiter, '.'), value);
+    }
     return acc;
-  }, {});
+  }, {} as Record<string, string>);
 }
 
 function loadFromYaml(env = 'development'): Record<string, unknown> {
   const configFile = `env.${env}.yaml`;
-  const configPath = resolve(process.cwd(), configFile);
+  // Xác định root của monorepo từ đây
+  const monorepoRoot = resolve(__dirname, '../../..');
+  const configPath = resolve(monorepoRoot, configFile);
 
   logger?.info(`loading configuration from: ${configPath}`, 'ConfigService');
-
-  return yaml.load(readFileSync(configPath, 'utf8')) as Record<string, unknown>;
+  try {
+    return yaml.load(readFileSync(configPath, 'utf8')) as Record<string, unknown>;
+  } catch (err) {
+    throw new ConfigException(`Cannot load config file at ${configPath}: ${(err as Error).message}`);
+  }
 }
 
 function loadConfiguration(): Record<string, unknown> {
-  const fromYaml = loadFromYaml(process.env.NODE_ENV);
+  const envName = process.env.NODE_ENV || 'development';
+  const fromYaml = loadFromYaml(envName);
   const fromProcess = loadFromEnv(process.env);
 
-  return merge(fromYaml, fromProcess);
+  return merge({}, fromYaml, fromProcess);
 }
 
 let CONFIG_DATA: Record<string, unknown> | undefined;
@@ -55,6 +67,5 @@ export function getOrThrow<T>(key: string): T {
   if (result === undefined) {
     throw new ConfigException(`Invalid ${key} config`);
   }
-
   return result as T;
 }

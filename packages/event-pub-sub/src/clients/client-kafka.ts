@@ -1,8 +1,8 @@
 import { getLogger } from '@packages/common';
-import { CloudEvent, Kafka as KafkaCEBuilder } from 'cloudevents';
-import type { KafkaMessage } from 'cloudevents';
+import { CloudEvent, type KafkaMessage } from 'cloudevents';
 import type { Admin, Consumer, EachMessagePayload, Producer } from 'kafkajs';
-import { Kafka, Partitioners, logLevel } from 'kafkajs';
+import { Kafka as KafkaCEBuilder, } from 'cloudevents';
+import { Kafka } from 'kafkajs';
 import { RuntimeException } from '../runtime-exception';
 import type { MessageHandler, ModuleRootOptions } from '../types';
 import { WinstonLogCreator } from '../utils/kafka-logger';
@@ -26,7 +26,10 @@ export class ClientKafka extends ClientProxy {
   protected admin?: Admin;
   protected client?: Kafka;
 
-  protected subscriptions = new Map<string, MessageHandler<unknown>[]>();
+  protected subscriptions: Map<string, MessageHandler<unknown>[]> = new Map<
+    string,
+    MessageHandler<unknown>[]
+  >();
 
   protected readonly transport: ModuleRootOptions['transport'];
 
@@ -40,11 +43,14 @@ export class ClientKafka extends ClientProxy {
 
   async onModuleInit(): Promise<void> {
     if (!this.options.enabled) return;
-    this.logger.verbose('init kafka client');
+
     try {
+      this.logger.verbose('init kafka client');
       await this.connect();
     } catch (e) {
-      this.logger.error('.onApplicationBootstrap', { reason: (e as Error).message });
+      this.logger.error('.onApplicationBootstrap', {
+        reason: (e as Error).message,
+      });
       throw new RuntimeException('Could not setup pubsub client');
     }
   }
@@ -55,6 +61,7 @@ export class ClientKafka extends ClientProxy {
 
   async onModuleDestroy(): Promise<void> {
     if (!this.options.enabled) return;
+
     try {
       await this.close();
     } catch (e) {
@@ -63,31 +70,20 @@ export class ClientKafka extends ClientProxy {
   }
 
   async connect(): Promise<ClientKafka> {
-    const opts = this.transport.options;
+    const options = this.transport.options;
 
-    // (1) Thêm env var để tắt partitioner warning
-    process.env.KAFKAJS_NO_PARTITIONER_WARNING = '1';
-
-    // (2) Tạo client với timeout dương và chỉ log ERROR
     this.client = new Kafka({
-      ...opts.client,               // brokers, clientId, v.v.
-      requestTimeout: 30_000,       // đảm bảo ≥1ms
-      connectionTimeout: 3_000,
-      logLevel: logLevel.ERROR,     // chỉ log ERROR trở lên
+      ...options.client,
       logCreator: WinstonLogCreator,
     });
-
-    // (3) Producer giữ lại legacy partitioner
     this.producer = this.client.producer({
-      ...opts.producer,
-      createPartitioner: Partitioners.LegacyPartitioner,
+      ...options.producer,
     });
+    this.consumer = this.client.consumer({
+      ...options.consumer,
+    });
+    this.admin = this.client.admin(options.admin);
 
-    // Consumer & Admin như trước
-    this.consumer = this.client.consumer({ ...opts.consumer });
-    this.admin = this.client.admin(opts.admin);
-
-    // Kết nối
     await this.producer.connect();
     await this.consumer.connect();
     await this.admin.connect();
@@ -96,13 +92,14 @@ export class ClientKafka extends ClientProxy {
   }
 
   async close(): Promise<void> {
-    if (this.producer) await this.producer.disconnect();
-    if (this.consumer) await this.consumer.disconnect();
-    if (this.admin) await this.admin.disconnect();
-    this.producer = this.consumer = this.admin = this.client = undefined;
+    this.producer && (await this.producer.disconnect());
+    this.consumer && (await this.consumer.disconnect());
+    this.admin && (await this.admin.disconnect());
+    this.producer = undefined;
+    this.consumer = undefined;
+    this.admin = undefined;
+    this.client = undefined;
   }
-
-
 
   public async createTopics(topics: string[]): Promise<boolean> {
     if (!this.admin) return false;

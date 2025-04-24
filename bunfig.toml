@@ -1,2 +1,9 @@
 [watch]
-paths = ["apps/example/src", "packages/common/src", "packages/event-pub-sub/src", "packages/mongodb-connector/src"]
+include = [
+  "apps/**/*",
+  "packages/**/*"
+]
+exclude = [
+  "node_modules",
+  ".git"
+]

@@ -1,4 +1,4 @@
-# hono-cf
+# zod-validator
 
 To install dependencies:
 

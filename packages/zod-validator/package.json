@@ -1,5 +1,5 @@
 {
-  "name": "@apps/hono-cf",
+  "name": "zod-validator",
   "module": "index.ts",
   "type": "module",
   "private": true,
@@ -7,13 +7,12 @@
     "@types/bun": "latest"
   },
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy --minify"
+    "start": "bun run ./index.ts"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "@packages/hono-core": "workspace:*"
+    "zod": "^3.25.0-canary.20250416T221658"
   }
 }

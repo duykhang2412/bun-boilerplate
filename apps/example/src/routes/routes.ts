@@ -1,5 +1,5 @@
+import TestZodValidator from "../api/test-zod.controller/test-zod.controller";
+
 export const ROUTES = {
-    controller: 'api',
-    TestAjv: 'TestAjv',
-    TestTrimData: 'TestTrimData'
+    'test-zod': TestZodValidator
 };

@@ -3,14 +3,13 @@ import { getLogger, getOrThrow, setupConfiguration } from '@packages/common';
 import { getCollection, setupMongoDatabase } from '@packages/mongodb-connector';
 import type { ConfigMongoDb, CollectionStructureConfig } from '@packages/mongodb-connector';
 import { Hono } from 'hono';
-import { ROUTES } from './routes/routes';
 import { createRedisService } from '@packages/redis-connector/index-redis';
 import { createDriver } from '@packages/neo4j';
 import type { Neo4jConfig } from '@packages/neo4j';
 import { ExternalEventsPubsub, type ModuleRootOptions } from '@packages/event-pub-sub';
 import { setupSwagger } from '@packages/ajv-decorator';
-import TestAjvDecoratorController from './api/test-ajv-decorator/test-ajv-decorator.controller';
 import { generateSwaggerDocs } from './utils/swagger';
+import TestZodValidator from './api/test-zod.controller/test-zod.controller';
 
 const logger = getLogger('index');
 
@@ -62,14 +61,14 @@ setupConfiguration();
     logger.error(error);
   }
 })();
-
-
-app.route(ROUTES.controller, TestAjvDecoratorController);
-
+// app.route(ROUTES.controller, TestAjvDecoratorController);
+app.route('/test-zod', TestZodValidator)
 const port = 3000
 logger.info(`Server is running on http://localhost:${port}`);
 logger.info(`Swagger UI http://localhost:${port}/ui`);
-serve({
-  fetch: app.fetch,
-  port
-})
+const server =
+  Bun.serve({
+    fetch: app.fetch,
+    port
+  });
+

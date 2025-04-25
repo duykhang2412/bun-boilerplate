@@ -25,7 +25,7 @@ TestZodValidator.get(
 );
 
 TestZodValidator.put(
-    '/users/:id',
+    '/:id',
     zValidator('param', z.object({ id: z.string().uuid() })),
     zValidator('json', UpdateUserDto),
     (c) => {
@@ -36,7 +36,7 @@ TestZodValidator.put(
     }
 );
 TestZodValidator.delete(
-    '/users/:id',
+    '/:id',
     zValidator('param', z.object({ id: z.string().uuid() })),
     (c) => {
         const { id } = c.req.valid('param') as { id: string };

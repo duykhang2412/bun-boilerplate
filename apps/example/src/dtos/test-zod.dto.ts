@@ -1,23 +1,15 @@
 import { z } from "zod";
-import { RoleEnum } from "./test-enum.dto";
 
 export const UserDto = z.object({
     id: z.string().uuid().optional(),
-    name: z.string().min(1, { message: 'Name không được để trống' }),
-    email: z.string().email({ message: 'Email không hợp lệ' }),
-    age: z.number().int().nonnegative({ message: 'Age phải là số nguyên >= 0' }),
-
-    roles: z
-        .array(RoleEnum)
-        .min(1, { message: 'Phải có ít nhất một role' })
-        .optional(),
-
+    name: z.string().min(1, { message: 'Invalid name' }),
+    email: z.string().email({ message: 'Invalid Email' }),
+    age: z.number().int().nonnegative({ message: 'Age must be negative number' }),
     tags: z
-        .array(z.string().min(1, { message: 'Tag không được để trống' }))
+        .array(z.string().min(1, { message: 'Invalid Tag' }))
         .refine((arr) => new Set(arr).size === arr.length, {
-            message: 'Tags phải duy nhất',
+            message: 'Tags must be unique',
         })
-        .optional(),
 });
 
 export type UserDto = z.infer<typeof UserDto>;

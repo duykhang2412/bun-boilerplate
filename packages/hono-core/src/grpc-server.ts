@@ -53,6 +53,6 @@ server.addService(proto.user.UserServiceInternal.service, {
 
 export function startGrpcServer(port = 3050) {
     server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), () => {
-        console.log(`gRPC server listening on port ${port}`);
+        console.log(`Grpc is running on http://localhost:${port}`);
     });
 }

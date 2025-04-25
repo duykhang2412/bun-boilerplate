@@ -1,4 +1,3 @@
-import { serve } from '@hono/node-server'
 import { getLogger, getOrThrow, setupConfiguration } from '@packages/common';
 import { getCollection, setupMongoDatabase } from '@packages/mongodb-connector';
 import type { ConfigMongoDb, CollectionStructureConfig } from '@packages/mongodb-connector';
@@ -6,7 +5,6 @@ import { Hono } from 'hono';
 import { createRedisService } from '@packages/redis-connector/index-redis';
 import { createDriver } from '@packages/neo4j';
 import type { Neo4jConfig } from '@packages/neo4j';
-import { ExternalEventsPubsub, type ModuleRootOptions } from '@packages/event-pub-sub';
 import { setupSwagger } from '@packages/ajv-decorator';
 import { generateSwaggerDocs } from './utils/swagger';
 import TestZodValidator from './api/test-zod.controller/test-zod.controller';
@@ -52,15 +50,15 @@ setupConfiguration();
 })();
 
 // Started Kafka
-(async () => {
-  try {
-    const EVENT_PUB_SUB_CONFIG = getOrThrow<ModuleRootOptions>('kafka');
-    const eventBus = new ExternalEventsPubsub<any>(EVENT_PUB_SUB_CONFIG);
-    await eventBus.onModuleInit();
-  } catch (error) {
-    logger.error(error);
-  }
-})();
+// (async () => {
+//   try {
+//     const EVENT_PUB_SUB_CONFIG = getOrThrow<ModuleRootOptions>('kafka');
+//     const eventBus = new ExternalEventsPubsub<any>(EVENT_PUB_SUB_CONFIG);
+//     await eventBus.onModuleInit();
+//   } catch (error) {
+//     logger.error(error);
+//   }
+// })();
 // app.route(ROUTES.controller, TestAjvDecoratorController);
 app.route('/test-zod', TestZodValidator)
 const port = 3000

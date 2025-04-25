@@ -4,14 +4,13 @@
   "private": true,
   "scripts": {
     "build": "bun build",
-    "dev:bun": "cd apps/hono-bun && bun --hot  dev",
+    "dev:bun": "bun --watch apps/hono-bun/src/index.ts",
     "dev:cf": "bun dev --filter=@apps/hono-cf",
     "lint": "bun lint",
     "deploy": "bun deploy --filter=@apps/hono-cf",
-    "format": "bun --write .",
     "dev:example": "bun --watch apps/example/src/main.ts",
     "bench:get": "autocannon -c 10 -d 20 http://localhost:3000/user/u123",
-    "bench:post": "autocannon -c 20 -d 30 -m POST -H 'Content-Type: application/json' -b '{\"userId\":\"bench1\",\"userName\":\"Tester\"}' http://localhost:3000/user"
+    "bench:post": "autocannon -c 10 -d 20 http://localhost:3000/user-controller/GetUser/test && autocannon -c 20 -d 30 -m POST -H 'Content-Type: application/json' -b '{\"userId\":\"bench1\",\"userName\":\"Tester\"}' http://localhost:3000/user-controller/CreateUser"
   },
   "peerDependencies": {
     "typescript": "^5"

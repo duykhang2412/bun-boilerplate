@@ -14,15 +14,15 @@ TestZodValidator.post(
     }
 );
 
-TestZodValidator.get(
-    '/:id',
-    zValidator('param', z.object({ id: z.string().uuid() })),
-    (c) => {
-        const { id } = c.req.valid('param') as { id: string };
-        const user = { id, name: 'Sample', email: 'sample@example.com', age: 30 } as UserDto;
-        return c.json({ success: true, data: user });
-    }
-);
+// TestZodValidator.get(
+//     '/:id',
+//     zValidator('param', z.object({ id: z.string().uuid() })),
+//     (c) => {
+//         const { id } = c.req.valid('param') as { id: string };
+//         const user = { id, name: 'Sample', email: 'sample@example.com', age: 30 } as UserDto;
+//         return c.json({ success: true, data: user });
+//     }
+// );
 
 TestZodValidator.put(
     '/:id',
